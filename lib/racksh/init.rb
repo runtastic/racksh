@@ -3,8 +3,8 @@ require 'rack'
 ENV['RACK_ENV'] ||= 'development'
 ENV['CONFIG_RU'] ||= 'config.ru'
 
-dir = File.expand_path(File.dirname(__FILE__))
-%w(session version init).each { |f| require File.join(dir, f) }
+dir = ::File.expand_path(::File.dirname(__FILE__))
+%w(session version init).each { |f| require ::File.join(dir, f) }
 
 def reload!
   puts "Rack::Shell reloading..."
@@ -14,8 +14,6 @@ end
 
 module Rack
   module Shell
-    File = ::File
-
     def self.init
       config_ru = ENV['CONFIG_RU']
 
@@ -24,12 +22,12 @@ module Rack
       $rack = Rack::Shell::Session.new(rack_app)
 
       # run ~/.rackshrc
-      rcfile = File.expand_path("~/.rackshrc")
-      eval(File.read(rcfile)) if File.exists?(rcfile)
+      rcfile = ::File.expand_path("~/.rackshrc")
+      eval(::File.read(rcfile)) if ::File.exists?(rcfile)
 
       # run local .rackshrc (from app dir)
-      rcfile = File.expand_path(File.join(File.dirname(config_ru), ".rackshrc"))
-      eval(File.read(rcfile)) if File.exists?(rcfile)
+      rcfile = ::File.expand_path(::File.join(::File.dirname(config_ru), ".rackshrc"))
+      eval(::File.read(rcfile)) if ::File.exists?(rcfile)
 
       # print startup info
       unless ENV['RACKSH_SKIP_INTRO']
